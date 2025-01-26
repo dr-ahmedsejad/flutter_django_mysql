@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_django_mysql/ServiceArticle.dart';
 
@@ -6,11 +5,13 @@ class ModifierArticleScreen extends StatefulWidget {
   final int id;
   final String titre;
   final String contenu;
+  final String etat;
 
   ModifierArticleScreen({
     required this.id,
     required this.titre,
     required this.contenu,
+    required this.etat,
   });
 
   @override
@@ -21,6 +22,8 @@ class _ModifierArticleScreenState extends State<ModifierArticleScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titreController;
   late TextEditingController _contenuController;
+  String _selectedEtat = ''; // État sélectionné
+  final List<String> _etatOptions = ['En attente', 'Validé']; // Options d'état
   ServiceArticle ServArticle = ServiceArticle();
 
   @override
@@ -28,6 +31,7 @@ class _ModifierArticleScreenState extends State<ModifierArticleScreen> {
     super.initState();
     _titreController = TextEditingController(text: widget.titre);
     _contenuController = TextEditingController(text: widget.contenu);
+    _selectedEtat = widget.etat;
   }
 
   @override
@@ -112,6 +116,44 @@ class _ModifierArticleScreenState extends State<ModifierArticleScreen> {
                   return null;
                 },
               ),
+              SizedBox(height: 20),
+              Text(
+                "État de l'article",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.indigo,
+                ),
+              ),
+              SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                value: _selectedEtat,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                items: _etatOptions.map((String etat) {
+                  return DropdownMenuItem<String>(
+                    value: etat,
+                    child: Text(etat),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedEtat = newValue!;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Veuillez sélectionner un état";
+                  }
+                  return null;
+                },
+              ),
               SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
@@ -121,6 +163,7 @@ class _ModifierArticleScreenState extends State<ModifierArticleScreen> {
                         widget.id,
                         _titreController.text,
                         _contenuController.text,
+                        _selectedEtat,
                       );
                       if (resultat == true) {
                         ScaffoldMessenger.of(context).showSnackBar(

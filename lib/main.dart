@@ -165,7 +165,7 @@ class _EtatListeArticles extends State<ListeArticles> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ModifierArticleScreen(id: article['id'], titre: article['titre'], contenu: article['contenu'])),
+                        MaterialPageRoute(builder: (context) => ModifierArticleScreen(id: article['id'], titre: article['titre'], contenu: article['contenu'], etat: article['etat'])),
                       ).then((value) {
                         if (value == true) {
                           _recupererArticles();
@@ -178,7 +178,7 @@ class _EtatListeArticles extends State<ListeArticles> {
                     onPressed: () => _supprimerArticle(article['id']),
                   ),
                   // Afficher une icône en fonction de l'état de l'article
-                  article['etat'] == 'EN_ATTENTE'
+                  article['etat'] == 'En attente'
                       ? Icon(Icons.hourglass_empty, color: Colors.orange)
                       : Icon(Icons.check_circle, color: Colors.green),
                 ],

@@ -33,11 +33,11 @@ class ServiceArticle {
 
 
   /// Modifier un article existant
-  Future<bool> modifierArticle(int id, String titre, String contenu) async {
+  Future<bool> modifierArticle(int id, String titre, String contenu, String etat) async {
     final response = await http.put(
       Uri.parse("$urlBase/articles/$id/"),
       headers: {"Content-Type": "application/json"},
-      body: json.encode({"titre": titre, "contenu": contenu}),
+      body: json.encode({"titre": titre, "contenu": contenu,"etat":etat}),
     );
     if (response.statusCode == 200) {
       // Succès
